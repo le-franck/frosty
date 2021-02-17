@@ -3,7 +3,7 @@ export interface RepositoryModel {
   name: string;
   description: string;
   html_url: string;
-  created_at: Date;
+  language: string;
   stargazers_count: number;
   open_issues: number;
   owner: {
