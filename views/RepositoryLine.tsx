@@ -1,25 +1,30 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { SafeAreaView, View, FlatList, StyleSheet, Text, ActivityIndicator, Button } from 'react-native';
+import { SafeAreaView, View, FlatList, StyleSheet, Text, ActivityIndicator, TouchableOpacity } from 'react-native';
 import { RepositoryModel } from '../model/repository';
-import Icon from 'react-native-vector-icons/MaterialIcons';
-
-
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 const RepositoryLine = ({ repositories, fetchMore, isLoading }: { repositories: RepositoryModel[], fetchMore: Function, isLoading: boolean }) => {
-    const renderItem = ({ item }: { item: RepositoryModel }) => (
-        <View style={styles.item}>
-            <View style={styles.firstLine}>
-                <Text style={styles.title} numberOfLines={1}>{item.owner.login} / {item.name} </Text>
-                <View style={styles.stars}>
-                    <Icon name="star" size={14} color={"#4C4C58"} />
-                    <Text style={{ marginLeft: 4 }} >{item.stargazers_count}</Text>
+
+    const renderItem = ({ item }: { item: RepositoryModel }) => {
+
+        return (
+            <View style={styles.item}>
+                <View style={styles.firstLine}>
+                    <Text style={styles.title} numberOfLines={1}>{item.owner.login} / {item.name} </Text>
+                    <TouchableOpacity style={styles.stars} activeOpacity={0.5} onPress={() => {
+                        alert('Star-it');
+                    }}>
+                        <Icon name="star-o" size={16} color={"#4C4C58"} />
+                        <Text style={{ marginLeft: 2 }} >{item.stargazers_count}</Text>
+                    </TouchableOpacity>
                 </View>
-            </View>
-            {item.description && < Text style={styles.description} numberOfLines={2}>{item.description}</Text>}
-            {/*item.language && <Text style={styles.language} >{item.language}</Text>*/}
-        </View >
-    );
+                {item.description && < Text style={styles.description} numberOfLines={2}>{item.description}</Text>}
+                {/*item.language && <Text style={styles.language} >{item.language}</Text>*/}
+            </View >
+        )
+    }
+        ;
 
     const footer = () => {
         return isLoading ? <ActivityIndicator style={{ flexGrow: 1 }} size="large" color="#608BB3" /> : <View style={styles.item}></View>
@@ -60,7 +65,7 @@ const styles = StyleSheet.create({
     stars: {
         display: "flex",
         flexDirection: "row",
-        alignItems: "center",
+        alignItems: "baseline",
         marginLeft: 8,
     },
     title: {
@@ -85,10 +90,6 @@ const styles = StyleSheet.create({
         alignItems: "center",
         flexGrow: 1,
         position: "relative"
-    },
-    swipe: {
-        flex: 1,
-        backgroundColor: "#aaa"
     },
     loader: {
         display: "flex",
