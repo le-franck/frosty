@@ -2,7 +2,7 @@ import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { SafeAreaView, View, FlatList, StyleSheet, Text, ActivityIndicator, Button } from 'react-native';
 import { RepositoryModel } from '../model/repository';
-
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
 
 
@@ -10,11 +10,14 @@ const RepositoryLine = ({ repositories, fetchMore, isLoading }: { repositories: 
     const renderItem = ({ item }: { item: RepositoryModel }) => (
         <View style={styles.item}>
             <View style={styles.firstLine}>
-                <Text style={styles.title} numberOfLines={1}>{item.owner.login} / {item.name}</Text>
-                <Text style={styles.stars} >{item.stargazers_count}</Text>
+                <Text style={styles.title} numberOfLines={1}>{item.owner.login} / {item.name} </Text>
+                <View style={styles.stars}>
+                    <Icon name="star" size={14} color={"#4C4C58"} />
+                    <Text style={{ marginLeft: 4 }} >{item.stargazers_count}</Text>
+                </View>
             </View>
             {item.description && < Text style={styles.description} numberOfLines={2}>{item.description}</Text>}
-            {item.language && <Text style={styles.language} >{item.language}</Text>}
+            {/*item.language && <Text style={styles.language} >{item.language}</Text>*/}
         </View >
     );
 
@@ -35,7 +38,6 @@ const RepositoryLine = ({ repositories, fetchMore, isLoading }: { repositories: 
                 onEndReached={info => {
                     fetchMore(info);
                 }}
-                onScrollEndDrag={() => console.log("end")}
             />
         </SafeAreaView>
     );
@@ -45,6 +47,7 @@ const styles = StyleSheet.create({
     container: {
         display: "flex",
         flex: 1,
+        width: "100%",
     },
     item: {
         padding: 8,
@@ -52,11 +55,17 @@ const styles = StyleSheet.create({
         borderBottomColor: "#E6E6E6",
         borderBottomWidth: 1,
         fontSize: 14,
+        color: "#4C4C58",
     },
     stars: {
+        display: "flex",
+        flexDirection: "row",
+        alignItems: "center",
+        marginLeft: 8,
     },
     title: {
         color: "#608BB3",
+        flexShrink: 1,
     },
     description: {
         color: "#4C4C58",
@@ -73,7 +82,9 @@ const styles = StyleSheet.create({
         justifyContent: "space-between",
         marginBottom: 8,
         flexDirection: "row",
-        alignItems: "center"
+        alignItems: "center",
+        flexGrow: 1,
+        position: "relative"
     },
     swipe: {
         flex: 1,
