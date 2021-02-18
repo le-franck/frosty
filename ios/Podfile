@@ -10,6 +10,8 @@ target 'frosty' do
 
   use_react_native!(:path => config["reactNativePath"])
 
+  pod 'RNCAsyncStorage', :path => '../node_modules/@react-native-community/async-storage'
+  
   # Uncomment the code below to enable Flipper.
   #
   # You should not install Flipper in CI environments when creating release
