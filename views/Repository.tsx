@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { StyleSheet, Image, View, Button, Vibration } from 'react-native';
 import { RepositoryModel } from '../model/repository';
 import RepositoryLines from './RepositoryLines';
+import AsyncStorage from '@react-native-community/async-storage';
 
 interface Response {
     incomplete_results: boolean;
@@ -10,11 +11,13 @@ interface Response {
     total_count: number;
 }
 
+const STORAGE_KEY = '@starred_repositories';
 
 const RepositoryView = () => {
 
-    const [_loading, setLoading] = useState(false);
+    const [_loading, setLoading] = useState<boolean>(false);
     const [_repositories, setRepositories] = useState<RepositoryModel[]>([]);
+
 
     useEffect(() => {
         getRepos();

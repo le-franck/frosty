@@ -1,18 +1,18 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, Text, ActivityIndicator, TouchableOpacity } from 'react-native';
 import { RepositoryModel } from '../model/repository';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-const RepositoryLine = ({ repository }: { repository: RepositoryModel }) => {
+
+const RepositoryLine = ({ repository, isStarred, toggleIsStarred }: { repository: RepositoryModel, isStarred: boolean, toggleIsStarred: Function }) => {
+
     return (
         repository ?
             (<View style={styles.item}>
                 <View style={styles.firstLine}>
                     <Text style={styles.title} numberOfLines={1}>{repository.owner.login} / {repository.name} </Text>
-                    <TouchableOpacity style={styles.stars} activeOpacity={0.5} onPress={() => {
-                        alert('Star-it');
-                    }}>
-                        <Icon name="star-o" size={16} color={"#4C4C58"} />
+                    <TouchableOpacity style={styles.stars} activeOpacity={0.5} onPress={() => toggleIsStarred(repository.id)}>
+                        <Icon name={isStarred ? "star" : "star-o"} size={16} color={"#4C4C58"} />
                         <Text style={{ marginLeft: 2 }} >{repository.stargazers_count}</Text>
                     </TouchableOpacity>
                 </View>
