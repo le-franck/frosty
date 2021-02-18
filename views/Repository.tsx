@@ -2,7 +2,7 @@ import { StatusBar } from 'expo-status-bar';
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, Image, View, Button, Vibration } from 'react-native';
 import { RepositoryModel } from '../model/repository';
-import RepositoryLine from './RepositoryLine';
+import RepositoryLines from './RepositoryLines';
 
 interface Response {
     incomplete_results: boolean;
@@ -84,7 +84,7 @@ const RepositoryView = () => {
 
     return (
         <View style={styles.container}>
-            {_repositories && <RepositoryLine repositories={_repositories} fetchMore={(info: any) => endOfList(info)} isLoading={_loading}></RepositoryLine>}
+            {_repositories && <RepositoryLines repositories={_repositories} fetchMore={(info: any) => endOfList(info)} isLoading={_loading}></RepositoryLines>}
             <StatusBar style="auto" />
         </View>
     );
