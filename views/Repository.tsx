@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Image, View, Button } from 'react-native';
+import { StyleSheet, Image, View, Button, Vibration } from 'react-native';
 import { RepositoryModel } from '../model/repository';
 import RepositoryLine from './RepositoryLine';
 
