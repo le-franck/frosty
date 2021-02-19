@@ -3,6 +3,7 @@ import { SafeAreaView, View, FlatList, StyleSheet, ActivityIndicator } from 'rea
 import { RepositoryModel } from '../model/repository';
 import RepositoryLine from './RepositoryLine';
 import AsyncStorage from '@react-native-community/async-storage';
+import { COLORS_THEME } from '../constants/colors';
 
 const STORAGE_KEY = '@starred_repositories';
 
@@ -74,7 +75,8 @@ const styles = StyleSheet.create({
     container: {
         display: "flex",
         flex: 1,
-        width: "100%",
+        backgroundColor: COLORS_THEME.bg_secondary,
+
     },
     loader: {
         display: "flex",

@@ -2,34 +2,41 @@ import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, Text, ActivityIndicator, TouchableOpacity } from 'react-native';
 import { RepositoryModel } from '../model/repository';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { COLORS_THEME } from '../constants/colors';
 
 
 const RepositoryLine = ({ repository, isStarred, toggleIsStarred }: { repository: RepositoryModel, isStarred: boolean, toggleIsStarred: Function }) => {
 
+    const [_pressed, setPressed] = useState<boolean>(false);
+
     return (
         repository ?
-            (<View style={styles.item}>
-                <View style={styles.firstLine}>
-                    <Text style={styles.title} numberOfLines={1}>{repository.owner.login} / {repository.name} </Text>
-                    <TouchableOpacity style={styles.stars} activeOpacity={0.5} onPress={() => toggleIsStarred(repository.id)}>
-                        <Icon name={isStarred ? "star" : "star-o"} size={16} color={"#4C4C58"} />
-                        <Text style={{ marginLeft: 2 }} >{repository.stargazers_count}</Text>
-                    </TouchableOpacity>
+
+            (<TouchableOpacity activeOpacity={1} onPressIn={() => setPressed(true)} onPressOut={() => setPressed(false)}>
+                <View style={[_pressed && styles.item_pressed, styles.item]}>
+                    <View style={styles.firstLine}>
+                        <Text style={styles.title} numberOfLines={1}>{repository.owner.login} / {repository.name} </Text>
+                        <TouchableOpacity style={styles.stars} activeOpacity={0.5} onPress={() => toggleIsStarred(repository.id)}>
+                            <Icon name={isStarred ? "star" : "star-o"} size={16} color={isStarred ? COLORS_THEME.alert : COLORS_THEME.text_tertiary} />
+                            <Text style={styles.count} >{repository.stargazers_count}</Text>
+                        </TouchableOpacity>
+                    </View>
+                    {repository.description && < Text style={styles.description} numberOfLines={2}>{repository.description}</Text>}
+                    {/*item.language && <Text style={styles.language} >{item.language}</Text>*/}
                 </View>
-                {repository.description && < Text style={styles.description} numberOfLines={2}>{repository.description}</Text>}
-                {/*item.language && <Text style={styles.language} >{item.language}</Text>*/}
-            </View >) : <ActivityIndicator style={{ flexGrow: 1 }} size="large" color="#608BB3" />
+            </TouchableOpacity >) : <ActivityIndicator style={{ flexGrow: 1 }} size="large" color={COLORS_THEME.info} />
     )
 }
 
 const styles = StyleSheet.create({
     item: {
-        padding: 8,
-        marginHorizontal: 16,
-        borderBottomColor: "#E6E6E6",
+        paddingHorizontal: 24,
+        paddingVertical: 16,
+        borderBottomColor: COLORS_THEME.border_secondary,
         borderBottomWidth: 1,
-        fontSize: 14,
-        color: "#4C4C58",
+    },
+    item_pressed: {
+        backgroundColor: COLORS_THEME.bg_tertiary,
     },
     stars: {
         display: "flex",
@@ -37,26 +44,27 @@ const styles = StyleSheet.create({
         alignItems: "baseline",
         marginLeft: 8,
     },
+    count: {
+        fontSize: 16,
+        color: COLORS_THEME.text_primary,
+        marginLeft: 4,
+    },
     title: {
-        color: "#608BB3",
+        fontSize: 18,
+        color: COLORS_THEME.text_primary,
+        fontWeight: "600",
         flexShrink: 1,
     },
     description: {
-        color: "#4C4C58",
-        fontSize: 12,
-        marginBottom: 8,
-    },
-    language: {
-        color: "#4C4C58",
-        fontSize: 12,
-        fontWeight: 'bold'
+        color: COLORS_THEME.text_secondary,
+        fontSize: 14,
+        marginTop: 8,
     },
     firstLine: {
         display: "flex",
         justifyContent: "space-between",
-        marginBottom: 8,
         flexDirection: "row",
-        alignItems: "center",
+        alignItems: "baseline",
         flexGrow: 1,
         position: "relative"
     },

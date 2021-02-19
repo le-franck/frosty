@@ -1,7 +1,7 @@
-import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Image, View, Button } from 'react-native';
+import { StyleSheet, Image, View, Button, StatusBar, Platform } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
+import { COLORS_THEME } from '../constants/colors';
 
 const Home = () => {
 
@@ -14,12 +14,14 @@ const Home = () => {
             console.error('Error clearing app data.');
         }
     }
+    console.log(Platform.OS);
+
 
     return (
         <View style={styles.container}>
             <Image source={require('../img/GitHub_Logo_White.png')} style={{ width: 90, height: 40 }} />
             <Button title={"clearStorage"} onPress={clearAppData}></Button>
-            <StatusBar style="auto" />
+
         </View>
     );
 }
@@ -27,8 +29,7 @@ const Home = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        color: '#9a9ec9',
-        backgroundColor: '#4b56a4',
+        backgroundColor: COLORS_THEME.bg_primary,
         alignItems: 'center',
         justifyContent: 'center',
     },

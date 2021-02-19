@@ -1,9 +1,8 @@
-import { StatusBar } from 'expo-status-bar';
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Image, View, Button, Vibration } from 'react-native';
+import { StyleSheet, Image, View } from 'react-native';
 import { RepositoryModel } from '../model/repository';
 import RepositoryLines from './RepositoryLines';
-import AsyncStorage from '@react-native-community/async-storage';
+import { COLORS_THEME } from '../constants/colors';
 
 interface Response {
     incomplete_results: boolean;
@@ -39,6 +38,7 @@ const RepositoryView = () => {
         })
             .then(response => response.json())
             .then((responseJson: Response) => {
+
                 if (responseJson.items) {
                     const res: RepositoryModel[] = responseJson.items.map(({
                         id,
@@ -50,6 +50,7 @@ const RepositoryView = () => {
                         open_issues,
                         owner
                     }) => {
+
                         return ({
                             id,
                             name,
@@ -87,8 +88,8 @@ const RepositoryView = () => {
 
     return (
         <View style={styles.container}>
+            <View style={styles.header}><Image source={require('../img/GitHub-Mark-Light-120px-plus.png')} style={styles.headerImage} /></View>
             {_repositories && <RepositoryLines repositories={_repositories} fetchMore={(info: any) => endOfList(info)} isLoading={_loading}></RepositoryLines>}
-            <StatusBar style="auto" />
         </View>
     );
 }
@@ -96,10 +97,26 @@ const RepositoryView = () => {
 
 const styles = StyleSheet.create({
     container: {
+        display: "flex",
         flex: 1,
-        alignItems: 'center',
+        alignItems: 'stretch',
         justifyContent: 'center',
+
     },
+    header: {
+        display: "flex",
+        alignItems: "center",
+        alignSelf: "stretch",
+        borderBottomWidth: 2,
+        borderBottomColor: COLORS_THEME.border_primary,
+        paddingTop: 8,
+        paddingBottom: 16,
+        backgroundColor: COLORS_THEME.bg_primary,
+    },
+    headerImage: {
+        width: 32,
+        height: 32,
+    }
 });
 
 export default RepositoryView;
