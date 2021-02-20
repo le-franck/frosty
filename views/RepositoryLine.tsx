@@ -1,18 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, Text, ActivityIndicator, TouchableOpacity } from 'react-native';
-import { RepositoryModel } from '../model/repository';
+import { RepositoryLightModel } from '../model/repository_light';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { COLORS_THEME } from '../constants/colors';
+import { COLORS_THEME } from '../utils/constants';
 
 
-const RepositoryLine = ({ repository, isStarred, toggleIsStarred }: { repository: RepositoryModel, isStarred: boolean, toggleIsStarred: Function }) => {
+const RepositoryLine = ({ repository, isStarred, toggleIsStarred, navigation }: { repository: RepositoryLightModel, isStarred: boolean, toggleIsStarred: Function, navigation: any }) => {
 
     const [_pressed, setPressed] = useState<boolean>(false);
 
     return (
         repository ?
-
-            (<TouchableOpacity activeOpacity={1} onPressIn={() => setPressed(true)} onPressOut={() => setPressed(false)}>
+            (<TouchableOpacity activeOpacity={1} onPressIn={() => setPressed(true)} onPressOut={() => setPressed(false)} onPress={() => navigation.navigate('Repository', { owner: repository.owner.login, repo: repository.name })}>
                 <View style={[_pressed && styles.item_pressed, styles.item]}>
                     <View style={styles.firstLine}>
                         <Text style={styles.title} numberOfLines={1}>{repository.owner.login} / {repository.name} </Text>

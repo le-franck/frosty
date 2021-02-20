@@ -1,14 +1,13 @@
 import * as React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Home from "../views/Home";
-import RepositoryView from '../views/Repository';
+import RepositoryNavigator from '../views/RepositoryNavigator';
 import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
-import { COLORS_THEME } from '../constants/colors';
+import { COLORS_THEME } from '../utils/constants';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import Profile from '../views/Profile';
 
 const Tab = createBottomTabNavigator();
-
-
 
 const Tabbar = () => {
 
@@ -20,6 +19,8 @@ const Tabbar = () => {
                     return <Icon name={"home"} size={32} color={isFocused ? COLORS_THEME.info : COLORS_THEME.text_tertiary} />
                 case "Repos":
                     return <Icon name={"github"} size={32} color={isFocused ? COLORS_THEME.info : COLORS_THEME.text_tertiary} />
+                case "Profile":
+                    return <Icon name={"user"} size={32} color={isFocused ? COLORS_THEME.info : COLORS_THEME.text_tertiary} />
                 default:
                     break;
             }
@@ -74,8 +75,8 @@ const Tabbar = () => {
     return (
         <Tab.Navigator tabBar={props => <MyTabBar state={props.state} descriptors={props.descriptors} navigation={props.navigation} />} >
             <Tab.Screen name="Home" component={Home} />
-            <Tab.Screen name="Repos" component={RepositoryView} />
-            <Tab.Screen name="Home2" component={Home} />
+            <Tab.Screen name="Repos" component={RepositoryNavigator} />
+            <Tab.Screen name="Profile" component={Profile} />
         </Tab.Navigator>
     );
 }
