@@ -1,16 +1,37 @@
 import React, { useEffect, useState } from 'react';
-import { SafeAreaView, View, FlatList, StyleSheet, ActivityIndicator } from 'react-native';
+import { SafeAreaView, View, FlatList, StyleSheet, ActivityIndicator, Text } from 'react-native';
 import { RepositoryLightModel } from '../model/repository_light';
 import RepositoryLine from './RepositoryLine';
 import AsyncStorage from '@react-native-community/async-storage';
-import { COLORS_THEME, STORAGE_KEY } from '../utils/constants';
+import { COLORS_THEME, STORAGE_KEY } from '../utils/constants'
+import { getRepos } from '../logic/dataFetch';
 
-const RepositoryLines = ({ repositories, fetchMore, isLoading, starredRepositories, navigation }: { repositories: RepositoryLightModel[], fetchMore: Function, isLoading: boolean, starredRepositories: string[], navigation: any }) => {
 
-    const [_starredRepositories, setStarredRepositories] = useState<string[]>([...starredRepositories]);
+const RepositoryLines = ({ initialRepositories, starredRepositories, navigation }: { initialRepositories: RepositoryLightModel[], starredRepositories: string[], navigation: any }) => {
+
+    const [_starredRepositories, setStarredRepositories] = useState<string[]>(starredRepositories);
+    const [_repositories, setRepositories] = useState<RepositoryLightModel[]>(initialRepositories);
+    const [_loading, setLoading] = useState<boolean>(false);
+
+
+    useEffect(() => {
+        console.log(initialRepositories.length, _repositories.length);
+    }, [_repositories])
+
+    const endOfList = () => {
+        if (!_loading) {
+            setLoading(true);
+            console.log("enf of list fetch");
+            getRepos(_repositories, setRepositories);
+            setTimeout(() => {
+                //to show the loader
+                setLoading(false);
+            }, 1000);
+        }
+    }
 
     const footer = () => {
-        return isLoading ? <ActivityIndicator style={{ flexGrow: 1 }} size="large" color={COLORS_THEME.info} /> : <View ></View>
+        return _loading ? <ActivityIndicator style={{ flexGrow: 1 }} size="large" color={COLORS_THEME.info} /> : <View></View>
     }
 
     const saveData = async (id: string) => {
@@ -37,14 +58,14 @@ const RepositoryLines = ({ repositories, fetchMore, isLoading, starredRepositori
         <SafeAreaView style={styles.container}>
             <FlatList
                 contentContainerStyle={{ flexGrow: 1 }}
-                data={repositories}
+                data={_repositories}
                 renderItem={({ item }: { item: RepositoryLightModel }) => <RepositoryLine repository={item} isStarred={_starredRepositories.includes(item.id)} toggleIsStarred={saveData} navigation={navigation} />}
-                ListFooterComponent={footer}
+                ListFooterComponent={() => footer()}
                 ListFooterComponentStyle={styles.loader}
                 keyExtractor={(item: { id: string; }) => item.id + ''}
                 onEndReachedThreshold={0.01}
                 onEndReached={info => {
-                    fetchMore(info);
+                    endOfList();
                 }}
             />
         </SafeAreaView>

@@ -1,34 +1,31 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Image, View, Button, Text } from 'react-native';
+import { StyleSheet, Image, View, Button, Text, ActivityIndicator } from 'react-native';
 import RepositoryLines from './RepositoryLines';
 import RepositoryView from './Repository';
 import { COLORS_THEME, STORAGE_KEY } from '../utils/constants';
 import AsyncStorage from '@react-native-community/async-storage';
 import { createStackNavigator } from '@react-navigation/stack';
-import { RepositoryLightModel } from '../model/repository_light';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-
-interface Response {
-    incomplete_results: boolean;
-    items: RepositoryLightModel[];
-    total_count: number;
-}
+import { getRepos } from '../logic/dataFetch';
+import { RepositoryLightModel } from '../model/repository_light';
 
 const Stack = createStackNavigator();
 
 const RepositoryNavigator = () => {
 
-    const [_loading, setLoading] = useState<boolean>(false);
-    const [_repositories, setRepositories] = useState<RepositoryLightModel[]>([]);
     const [_starredRepositories, setStarredRepositories] = useState<string[]>([]);
-
+    const [_initialRepositories, setInitialRepositories] = useState<RepositoryLightModel[]>([]);
 
     useEffect(() => {
-        getRepos();
         readData();
+        initialDataFetch();
     }, [])
 
+    const initialDataFetch = () => {
+        //Need to pre initialise the first in the parent to fetch to not have to render awaited data in the flat list 
+        getRepos(_initialRepositories, setInitialRepositories);
+    }
 
     //had to move this here because Typescript does not let me cancel asynch function in a useEffect return () => false 
     const readData = async () => {
@@ -40,75 +37,22 @@ const RepositoryNavigator = () => {
             setStarredRepositories(starredRepositoriesParsed);
 
         } catch (e) {
-            alert(e);
+            console.error("error in the local storage")
         }
     }
 
-    const getRepos = () => {
-        setLoading(true);
-        const lastMonth = new Date(new Date().setMonth(new Date().getMonth() - 1))
-            .toISOString()
-            .split('T')[0];
 
-        const numberPerPage = 1;
-
-        const page = Math.ceil(_repositories.length / numberPerPage) + 1;
-
-        const lastMonthUrl = 'https://api.github.com/search/repositories?q=created:>' + lastMonth + '&sort=stars&order=desc&per_page=' + numberPerPage + '&page=' + page;
-        const allTimeUrl = 'https://api.github.com/search/repositories?q=sort=stars&order=desc&per_page=' + numberPerPage + '&page=' + page;
-        console.log(allTimeUrl);
-
-        fetch(allTimeUrl, {
-            'headers': {
-                'Authorization': "token 66ef3f80be2e4f109bfbb55831bb0e88006281b1"
-            }
-        })
-            .then(response => response.json())
-            .then((responseJson: Response) => {
-
-                if (responseJson.items) {
-                    const res: RepositoryLightModel[] = responseJson.items.map(({
-                        id,
-                        name,
-                        description,
-                        stargazers_count,
-                        owner
-                    }) => {
-
-                        return ({
-                            id,
-                            name,
-                            description,
-                            stargazers_count,
-                            owner: {
-                                login: owner.login,
-                            }
-                        })
-                    });
-                    setRepositories([..._repositories, ...res]);
-                }
-            })
-            .catch(error => console.log(error));
-
-        setTimeout(() => {
-            setLoading(false);
-        }, 1000);
-    }
-
-
-    const endOfList = () => {
-        if (!_loading) {
+    /* const clearStates = () => {
+        setRepositories([]);
+        setLoading(false);
+        if (_repositories.length === 0 && !_loading) {
             getRepos();
         }
     }
+ */
+    const Repositories = ({ route, navigation }: { route: any, navigation: any }) => {
+        console.log("Repositories");
 
-    const clearStates = () => {
-        setRepositories([]);
-        setLoading(false);
-        getRepos();
-    }
-
-    const Repositories = ({ navigation }: any) => {
         return (
             <View style={styles.container}>
                 <View style={styles.header}>
@@ -116,18 +60,18 @@ const RepositoryNavigator = () => {
                     </View>
                     <Image source={require('../img/GitHub-Mark-Light-120px-plus.png')} style={styles.headerImage} />
                     <View style={styles.headerRight}>
-                        <TouchableOpacity onPress={() => clearStates()} style={styles.headerButton}>
+                        <TouchableOpacity /* onPress={() => clearStates()} */ style={styles.headerButton}>
                             <Icon
-                                name="trash-o"
+                                name="refresh"
                                 size={32}
                                 color={COLORS_THEME.info}
                             />
                         </TouchableOpacity>
-
-
                     </View>
                 </View>
-                {_repositories && <RepositoryLines repositories={_repositories} fetchMore={() => endOfList()} isLoading={_loading} starredRepositories={_starredRepositories} navigation={navigation}></RepositoryLines>}
+                {_initialRepositories ?
+                    <RepositoryLines initialRepositories={_initialRepositories} starredRepositories={_starredRepositories} navigation={navigation} /> :
+                    <ActivityIndicator style={{ flexGrow: 1, backgroundColor: COLORS_THEME.bg_secondary }} size="large" color={COLORS_THEME.info} />}
             </View>);
     }
 
