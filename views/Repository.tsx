@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, Text, ActivityIndicator, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, Text, ActivityIndicator, TouchableOpacity, Image } from 'react-native';
 import { RepositoryModel } from '../model/repository';
 import { COLORS_THEME } from '../utils/constants';
+import { UserLightModel } from '../model/user_light';
 
 const RepositoryView = ({ owner, repo }: { owner: string, repo: string }) => {
     const [_loading, setLoading] = useState<boolean>(false);
     const [_repository, setRepository] = useState<RepositoryModel>()
+
     useEffect(() => { getRepos() }, [])
 
     const getRepos = () => {
@@ -21,27 +23,36 @@ const RepositoryView = ({ owner, repo }: { owner: string, repo: string }) => {
             .then((responseJson: RepositoryModel) => {
                 const {
                     id,
-                    name,
                     description,
-                    stargazers_count,
-                    owner: {
-                        avatar_url,
-                        login
-                    },
-                    html_url,
+                    forks_count,
+                    homepage,
                     language,
+                    name,
+                    open_issues_count,
+                    owner,
+                    stargazers_count,
+                    subscribers_count,
+                    watchers_count,
                 } = responseJson;
+
+                const user: UserLightModel = {
+                    id: owner.id,
+                    avatar_url: owner.avatar_url,
+                    login: owner.login
+                }
+
                 const res: RepositoryModel = {
                     id,
-                    name,
                     description,
-                    stargazers_count,
-                    owner: {
-                        avatar_url,
-                        login
-                    },
-                    html_url,
+                    forks_count,
+                    homepage,
                     language,
+                    name,
+                    open_issues_count,
+                    owner: user,
+                    stargazers_count,
+                    subscribers_count,
+                    watchers_count,
                 }
                 setRepository(res);
             })
@@ -50,11 +61,23 @@ const RepositoryView = ({ owner, repo }: { owner: string, repo: string }) => {
         setLoading(false);
     }
 
+    const RepositoryWrapper = () => {
+        return (
+            <View >
+                <Image
+                    style={styles.userPicture}
+                    source={{
+                        uri: _repository?.owner.avatar_url,
+                    }}
+                />
+            </View>)
+    }
+
 
     return (
         <View style={styles.container}>
             {_loading ? <ActivityIndicator style={{ flexGrow: 1 }} size="large" color={COLORS_THEME.info} /> :
-                <Text style={{ color: COLORS_THEME.info }}>{_repository?.owner.login} / {_repository?.name}</Text>}
+                <RepositoryWrapper />}
         </View>
     )
 }
@@ -63,12 +86,12 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: COLORS_THEME.bg_secondary,
+        padding: 16,
     },
-    item: {
-        paddingHorizontal: 24,
-        paddingVertical: 16,
-        borderBottomColor: COLORS_THEME.border_secondary,
-        borderBottomWidth: 1,
+    userPicture: {
+        height: 80,
+        width: 80,
+        borderRadius: 40,
     }
 });
 

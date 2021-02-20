@@ -1,12 +1,16 @@
+import { UserLightModel } from "./user_light";
+
 export interface RepositoryModel {
-  id: string,
-  name: string;
+  id: string;
   description: string;
-  html_url: string;
+  forks_count: number;
+  homepage: string;
   language: string;
+  name: string;
+  open_issues_count: number;
+  owner: UserLightModel
   stargazers_count: number;
-  owner: {
-    avatar_url: string;
-    login: string;
-  };
+  subscribers_count: number
+  watchers_count: number
+
 }

@@ -1,5 +1,5 @@
 export interface RepositoryLightModel {
-  id: string,
+  id: string;
   name: string;
   description: string;
   stargazers_count: number;

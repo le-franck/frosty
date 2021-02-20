@@ -46,14 +46,19 @@ const RepositoryNavigator = () => {
 
     const getRepos = () => {
         setLoading(true);
-
-
         const lastMonth = new Date(new Date().setMonth(new Date().getMonth() - 1))
             .toISOString()
             .split('T')[0];
-        const page = Math.ceil(_repositories.length / 24) + 1;
 
-        fetch('https://api.github.com/search/repositories?q=created:>' + lastMonth + '&sort=stars&order=desc&per_page=24&page=' + page, {
+        const numberPerPage = 1;
+
+        const page = Math.ceil(_repositories.length / numberPerPage) + 1;
+
+        const lastMonthUrl = 'https://api.github.com/search/repositories?q=created:>' + lastMonth + '&sort=stars&order=desc&per_page=' + numberPerPage + '&page=' + page;
+        const allTimeUrl = 'https://api.github.com/search/repositories?q=sort=stars&order=desc&per_page=' + numberPerPage + '&page=' + page;
+        console.log(allTimeUrl);
+
+        fetch(allTimeUrl, {
             'headers': {
                 'Authorization': "token 66ef3f80be2e4f109bfbb55831bb0e88006281b1"
             }
@@ -97,23 +102,36 @@ const RepositoryNavigator = () => {
         }
     }
 
-    const Repositories = ({ navigation }: any) => {
-        console.log((navigation));
+    const clearStates = () => {
+        setRepositories([]);
+        setLoading(false);
+        getRepos();
+    }
 
+    const Repositories = ({ navigation }: any) => {
         return (
             <View style={styles.container}>
                 <View style={styles.header}>
-                    <View style={styles.headerLeft}></View>
+                    <View style={styles.headerLeft}>
+                    </View>
                     <Image source={require('../img/GitHub-Mark-Light-120px-plus.png')} style={styles.headerImage} />
-                    <View style={styles.headerRight}></View>
+                    <View style={styles.headerRight}>
+                        <TouchableOpacity onPress={() => clearStates()} style={styles.headerButton}>
+                            <Icon
+                                name="trash-o"
+                                size={32}
+                                color={COLORS_THEME.info}
+                            />
+                        </TouchableOpacity>
+
+
+                    </View>
                 </View>
                 {_repositories && <RepositoryLines repositories={_repositories} fetchMore={() => endOfList()} isLoading={_loading} starredRepositories={_starredRepositories} navigation={navigation}></RepositoryLines>}
             </View>);
     }
 
     const Repository = ({ route, navigation }: { route: any, navigation: any }) => {
-        console.log(navigation);
-
         const { owner, repo } = route.params;
         return (
             <View style={styles.container}>
@@ -171,6 +189,8 @@ const styles = StyleSheet.create({
     },
     headerRight: {
         flex: 1,
+        display: "flex",
+        alignItems: "flex-end",
     },
     headerButton: {
         display: "flex",
