@@ -10,6 +10,7 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import { getRepos } from '../logic/dataFetch';
 import { RepositoryLightModel } from '../model/repository_light';
 import { RepositoryLocalModel } from '../model/repository_local';
+import RepositoryStarredLines from './RepositoryStarredLines';
 
 const RepositoriesStarredWrapper = ({ route, navigation }: { route: any, navigation: any }) => {
 
@@ -17,7 +18,7 @@ const RepositoriesStarredWrapper = ({ route, navigation }: { route: any, navigat
 
     useEffect(() => {
         readData();
-    }, [])
+    })
 
 
     //had to move this here because Typescript does not let me cancel asynch function in a useEffect return () => false 
@@ -37,7 +38,11 @@ const RepositoriesStarredWrapper = ({ route, navigation }: { route: any, navigat
 
     return (
         <View style={styles.container}>
-            <ActivityIndicator style={{ flexGrow: 1, backgroundColor: COLORS_THEME.bg_secondary }} size="large" color={COLORS_THEME.info} />
+            {_starredRepositories.length > 0 ?
+                <RepositoryStarredLines starredRepositories={_starredRepositories} navigation={navigation} route={route} />
+                : <ActivityIndicator style={{ flexGrow: 1, backgroundColor: COLORS_THEME.bg_secondary }} size="large" color={COLORS_THEME.info} />
+
+            }
         </View>);
 
 

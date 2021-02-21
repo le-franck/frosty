@@ -6,29 +6,33 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import { COLORS_THEME } from '../utils/constants';
 
 
-const RepositoryLine = ({ repository, isStarred, toggleIsStarred, navigation, route }: { repository: RepositoryLightModel, isStarred: boolean, toggleIsStarred: Function, navigation: any, route: any }) => {
+const RepositoryStarredLine = ({ repository, toggleIsStarred, navigation, route }: { repository: RepositoryLocalModel, toggleIsStarred: Function, navigation: any, route: any }) => {
+
+    console.log(repository);
+
 
     const [_pressed, setPressed] = useState<boolean>(false);
 
     const handleOnPress = () => {
-        navigation.navigate('Repository', { fullname: repository.owner.login + "/" + repository.name })
+        navigation.navigate('Repository', { fullname: repository.fullname })
     }
 
     const savableRepo: RepositoryLocalModel = {
         id: repository.id,
-        fullname: repository.owner.login + "/" + repository.name,
+        fullname: repository.fullname,
         description: repository.description,
     }
 
+    const splitedFullName: string[] = repository.fullname.split("/");
+    const isStarred = true;
     return (
         repository ?
             (<TouchableOpacity activeOpacity={1} onPressIn={() => setPressed(true)} onPressOut={() => setPressed(false)} onPress={() => handleOnPress()}>
                 <View style={[_pressed && styles.item_pressed, styles.item]}>
                     <View style={styles.firstLine}>
-                        <Text style={styles.title} numberOfLines={1}>{repository.owner.login} / {repository.name} </Text>
+                        <Text style={styles.title} numberOfLines={1}>{splitedFullName[0]} / {splitedFullName[1]} </Text>
                         <TouchableOpacity style={styles.stars} activeOpacity={0.5} onPress={() => toggleIsStarred(savableRepo)}>
                             <Icon name={isStarred ? "star" : "star-o"} size={16} color={isStarred ? COLORS_THEME.alert : COLORS_THEME.text_tertiary} />
-                            <Text style={styles.count} >{repository.stargazers_count}</Text>
                         </TouchableOpacity>
                     </View>
                     {repository.description && < Text style={styles.description} numberOfLines={2}>{repository.description}</Text>}
@@ -79,4 +83,4 @@ const styles = StyleSheet.create({
 });
 
 
-export default RepositoryLine;
+export default RepositoryStarredLine;

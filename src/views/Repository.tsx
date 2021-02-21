@@ -6,13 +6,13 @@ import { COLORS_THEME, LANGUAGE_COLOR } from '../utils/constants';
 import { getRepo } from '../logic/dataFetch';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-const RepositoryView = ({ owner, repo }: { owner: string, repo: string, }) => {
+const RepositoryView = ({ fullname }: { fullname: string, }) => {
     const [_loading, setLoading] = useState<boolean>(false);
     const [_repository, setRepository] = useState<RepositoryModel | undefined>()
 
     useEffect(() => {
         setLoading(true);
-        getRepo(setRepository, owner, repo);
+        getRepo(setRepository, fullname);
         setLoading(false);
     }, [])
 

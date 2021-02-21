@@ -8,10 +8,10 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import RepositoryView from './Repository';
 
 const RepositoryWrapper = ({ route, navigation }: { route: any, navigation: any }) => {
-    const { owner, repo } = route.params;
+    const { fullname } = route.params;
     return (
         <View style={styles.container}>
-            <RepositoryView owner={owner} repo={repo} />
+            <RepositoryView fullname={fullname} />
         </View >);
 }
 

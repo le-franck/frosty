@@ -54,8 +54,8 @@ export const getRepos = (repositories: RepositoryLightModel[], setRepositories: 
         .catch(error => console.log(error));
 }
 
-export const getRepo = (setRepository: Function, owner: string, repo: string) => {
-    fetch('https://api.github.com/repos/' + owner + '/' + repo, {
+export const getRepo = (setRepository: Function, fullname: string,) => {
+    fetch('https://api.github.com/repos/' + fullname, {
         'headers': {
             'Authorization': "token 66ef3f80be2e4f109bfbb55831bb0e88006281b1",
             'Accept': 'application/vnd.github.v3+json'
@@ -76,6 +76,7 @@ export const getRepo = (setRepository: Function, owner: string, repo: string) =>
                 subscribers_count,
                 watchers_count,
             } = responseJson;
+
             const user: UserLightModel = {
                 id: owner.id,
                 avatar_url: owner.avatar_url,

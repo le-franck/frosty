@@ -9,6 +9,7 @@ import Profile from '../views/Profile';
 import RepositoriesNavigator from './RepositoriesNavigator';
 import RepositoriesWrapper from '../views/RepositoriesWrapper';
 import Animated from 'react-native-reanimated';
+import RepositoriesStarredWrapper from '../views/RepositoriesStarredWrapper';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -83,7 +84,7 @@ const TopBar = () => {
     return (
         <Tab.Navigator tabBar={props => <MyTabBar state={props.state} descriptors={props.descriptors} navigation={props.navigation} position={props.position} />} >
             <Tab.Screen name={TABS.TOP} component={RepositoriesWrapper} />
-            <Tab.Screen name={TABS.SAVED} component={RepositoriesWrapper} />
+            <Tab.Screen name={TABS.SAVED} component={RepositoriesStarredWrapper} />
         </Tab.Navigator>
     );
 }
