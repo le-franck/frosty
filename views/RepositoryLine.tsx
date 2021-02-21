@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, Text, ActivityIndicator, TouchableOpacity } from 'react-native';
 import { RepositoryLightModel } from '../model/repository_light';
+import { RepositoryLocalModel } from '../model/repository_local';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { COLORS_THEME } from '../utils/constants';
 
@@ -13,13 +14,19 @@ const RepositoryLine = ({ repository, isStarred, toggleIsStarred, navigation, ro
         navigation.navigate('Repository', { owner: repository.owner.login, repo: repository.name })
     }
 
+    const savableRepo: RepositoryLocalModel = {
+        id: repository.id,
+        fullname: repository.owner.login + "/" + repository.name,
+        description: repository.description,
+    }
+
     return (
         repository ?
             (<TouchableOpacity activeOpacity={1} onPressIn={() => setPressed(true)} onPressOut={() => setPressed(false)} onPress={() => handleOnPress()}>
                 <View style={[_pressed && styles.item_pressed, styles.item]}>
                     <View style={styles.firstLine}>
                         <Text style={styles.title} numberOfLines={1}>{repository.owner.login} / {repository.name} </Text>
-                        <TouchableOpacity style={styles.stars} activeOpacity={0.5} onPress={() => toggleIsStarred(repository.id)}>
+                        <TouchableOpacity style={styles.stars} activeOpacity={0.5} onPress={() => toggleIsStarred(savableRepo)}>
                             <Icon name={isStarred ? "star" : "star-o"} size={16} color={isStarred ? COLORS_THEME.alert : COLORS_THEME.text_tertiary} />
                             <Text style={styles.count} >{repository.stargazers_count}</Text>
                         </TouchableOpacity>

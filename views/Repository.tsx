@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, Text, ActivityIndicator, TouchableOpacity, Image } from 'react-native';
 import { RepositoryModel } from '../model/repository';
+import { RepositoryLocalModel } from '../model/repository_local';
 import { COLORS_THEME, LANGUAGE_COLOR } from '../utils/constants';
 import { getRepo } from '../logic/dataFetch';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-const RepositoryView = ({ owner, repo, isStarred }: { owner: string, repo: string, isStarred: boolean }) => {
+const RepositoryView = ({ owner, repo }: { owner: string, repo: string, }) => {
     const [_loading, setLoading] = useState<boolean>(false);
     const [_repository, setRepository] = useState<RepositoryModel>(null)
 
@@ -35,7 +36,6 @@ const RepositoryView = ({ owner, repo, isStarred }: { owner: string, repo: strin
 
         const { login, avatar_url } = owner;
 
-
         return (
             <View style={styles.container}>
                 <View style={styles.iconTextWrapper}>
@@ -50,10 +50,10 @@ const RepositoryView = ({ owner, repo, isStarred }: { owner: string, repo: strin
 
                 <View style={styles.titleWrapper}>
                     <Text style={styles.repoName} numberOfLines={1}>{name}</Text>
-                    <TouchableOpacity style={styles.stars} activeOpacity={0.5} onPress={() => toggleIsStarred(repository.id)}>
-                        <Icon name={isStarred ? "star" : "star-o"} size={16} color={isStarred ? COLORS_THEME.alert : COLORS_THEME.text_tertiary} />
-                        <Text style={styles.count} >{repository.stargazers_count}</Text>
-                    </TouchableOpacity>
+                    {/*  <TouchableOpacity style={styles.stars} activeOpacity={0.5} onPress={() => toggleIsStarred(id)}>
+                        <Icon name={"star"} size={16} color={COLORS_THEME.alert} />
+                        <Text style={styles.count} >{stargazers_count}</Text>
+                    </TouchableOpacity> */}
                 </View>
                 {description && <Text style={styles.description}>{description}</Text>}
                 {homepage !== "" &&

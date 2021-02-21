@@ -5,11 +5,12 @@ import RepositoryLine from './RepositoryLine';
 import AsyncStorage from '@react-native-community/async-storage';
 import { COLORS_THEME, STORAGE_KEY } from '../utils/constants'
 import { getRepos } from '../logic/dataFetch';
+import { RepositoryLocalModel } from '../model/repository_local';
+import _ from 'lodash';
 
+const RepositoryLines = ({ initialRepositories, starredRepositories, navigation, route }: { initialRepositories: RepositoryLightModel[], starredRepositories: RepositoryLocalModel[], navigation: any, route: any }) => {
 
-const RepositoryLines = ({ initialRepositories, starredRepositories, navigation, route }: { initialRepositories: RepositoryLightModel[], starredRepositories: string[], navigation: any, route: any }) => {
-
-    const [_starredRepositories, setStarredRepositories] = useState<string[]>(starredRepositories);
+    const [_starredRepositories, setStarredRepositories] = useState<RepositoryLocalModel[]>(starredRepositories);
     const [_repositories, setRepositories] = useState<RepositoryLightModel[]>(initialRepositories);
     const [_loading, setLoading] = useState<boolean>(false);
 
@@ -28,18 +29,19 @@ const RepositoryLines = ({ initialRepositories, starredRepositories, navigation,
         return _loading ? <ActivityIndicator style={{ flexGrow: 1 }} size="large" color={COLORS_THEME.info} /> : <View></View>
     }
 
-    const saveData = async (id: string) => {
+    const saveData = async (repo: RepositoryLocalModel) => {
         try {
             const starredRepositories = await AsyncStorage.getItem(STORAGE_KEY);
-            let starredRepositoriesParsed = [];
+            let starredRepositoriesParsed: RepositoryLocalModel[] = [];
             if (starredRepositories)
                 starredRepositoriesParsed = JSON.parse(starredRepositories);
 
-            const index = starredRepositoriesParsed.indexOf(id);
-            if (index > -1) {
-                starredRepositoriesParsed.splice(index, 1);
+            // const index = starredRepositoriesParsed.indexOf(id);
+            const alreadySaved: (RepositoryLocalModel | undefined) = _.find(starredRepositoriesParsed, ["id", repo.id]);
+            if (alreadySaved) {
+                _.remove(starredRepositoriesParsed, alreadySaved);
             } else {
-                starredRepositoriesParsed.push(id);
+                starredRepositoriesParsed.push(repo);
             }
             setStarredRepositories(starredRepositoriesParsed);
             await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(starredRepositoriesParsed));
@@ -48,13 +50,19 @@ const RepositoryLines = ({ initialRepositories, starredRepositories, navigation,
         }
     }
 
+    const isStarred = (id: string): boolean => {
+        const alreadySaved: (RepositoryLocalModel | undefined) = _.find(_starredRepositories, ["id", id]);
+        return alreadySaved !== undefined;
+    }
+
+
     return (
         <SafeAreaView style={styles.container}>
             <Text>{_repositories.length}</Text>
             <FlatList
                 contentContainerStyle={{ flexGrow: 1 }}
                 data={_repositories}
-                renderItem={({ item }: { item: RepositoryLightModel }) => <RepositoryLine repository={item} isStarred={_starredRepositories.includes(item.id)} toggleIsStarred={saveData} navigation={navigation} route={route} />}
+                renderItem={({ item }: { item: RepositoryLightModel }) => <RepositoryLine repository={item} isStarred={isStarred(item.id)} toggleIsStarred={saveData} navigation={navigation} route={route} />}
                 ListFooterComponent={() => footer()}
                 ListFooterComponentStyle={styles.loader}
                 keyExtractor={(item: { id: string; }) => item.id + ''}

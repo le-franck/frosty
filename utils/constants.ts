@@ -12,7 +12,7 @@ export const COLORS_THEME = {
     info: "#79c0ff",
 }
 
-export const STARRED_REPOSITOIRES = '@starred_repositories';
+export const STORAGE_KEY = '@starred_repositories';
 
 export const LANGUAGE_COLOR: any = {
     "Mercury": "#ff2b2b",

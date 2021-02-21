@@ -9,10 +9,11 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { getRepos } from '../logic/dataFetch';
 import { RepositoryLightModel } from '../model/repository_light';
+import { RepositoryLocalModel } from '../model/repository_local';
 
 const RepositoriesWrapper = ({ route, navigation }: { route: any, navigation: any }) => {
 
-    const [_starredRepositories, setStarredRepositories] = useState<string[]>([]);
+    const [_starredRepositories, setStarredRepositories] = useState<RepositoryLocalModel[]>([]);
     const [_initialRepositories, setInitialRepositories] = useState<RepositoryLightModel[]>([]);
 
     useEffect(() => {
@@ -32,7 +33,8 @@ const RepositoriesWrapper = ({ route, navigation }: { route: any, navigation: an
     const readData = async () => {
         try {
             const starredRepositories = await AsyncStorage.getItem(STORAGE_KEY);
-            let starredRepositoriesParsed = [];
+
+            let starredRepositoriesParsed: RepositoryLocalModel[] = [];
             if (starredRepositories)
                 starredRepositoriesParsed = JSON.parse(starredRepositories);
             setStarredRepositories(starredRepositoriesParsed);

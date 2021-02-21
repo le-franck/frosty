@@ -16,8 +16,6 @@ const Stack = createStackNavigator();
 const RepositoryNavigator = () => {
 
     const Repository = ({ route, navigation }: { route: any, navigation: any }) => {
-        console.log("Repository");
-
         const { owner, repo } = route.params;
         return (
             <View style={styles.container}>
