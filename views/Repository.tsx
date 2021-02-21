@@ -1,84 +1,80 @@
 import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, Text, ActivityIndicator, TouchableOpacity, Image } from 'react-native';
 import { RepositoryModel } from '../model/repository';
-import { COLORS_THEME } from '../utils/constants';
-import { UserLightModel } from '../model/user_light';
+import { COLORS_THEME, LANGUAGE_COLOR } from '../utils/constants';
+import { getRepo } from '../logic/dataFetch';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
-const RepositoryView = ({ owner, repo }: { owner: string, repo: string }) => {
+const RepositoryView = ({ owner, repo, isStarred }: { owner: string, repo: string, isStarred: boolean }) => {
     const [_loading, setLoading] = useState<boolean>(false);
-    const [_repository, setRepository] = useState<RepositoryModel>()
+    const [_repository, setRepository] = useState<RepositoryModel>(null)
 
-    useEffect(() => { getRepos() }, [])
-
-    const getRepos = () => {
+    useEffect(() => {
         setLoading(true);
-
-        fetch('https://api.github.com/repos/' + owner + '/' + repo, {
-            'headers': {
-                'Authorization': "token 66ef3f80be2e4f109bfbb55831bb0e88006281b1",
-                'Accept': 'application/vnd.github.v3+json'
-            }
-        })
-            .then(response => response.json())
-            .then((responseJson: RepositoryModel) => {
-                const {
-                    id,
-                    description,
-                    forks_count,
-                    homepage,
-                    language,
-                    name,
-                    open_issues_count,
-                    owner,
-                    stargazers_count,
-                    subscribers_count,
-                    watchers_count,
-                } = responseJson;
-
-                const user: UserLightModel = {
-                    id: owner.id,
-                    avatar_url: owner.avatar_url,
-                    login: owner.login
-                }
-
-                const res: RepositoryModel = {
-                    id,
-                    description,
-                    forks_count,
-                    homepage,
-                    language,
-                    name,
-                    open_issues_count,
-                    owner: user,
-                    stargazers_count,
-                    subscribers_count,
-                    watchers_count,
-                }
-                setRepository(res);
-            })
-
-            .catch(error => console.log(error));
+        getRepo(setRepository, owner, repo)
         setLoading(false);
-    }
+    }, [])
+
 
     const RepositoryWrapper = () => {
+        console.log(_repository);
+
+        const {
+            id,
+            description,
+            forks_count,
+            homepage,
+            language,
+            name,
+            open_issues_count,
+            owner,
+            stargazers_count,
+            subscribers_count,
+            watchers_count,
+        } = _repository;
+
+        const { login, avatar_url } = owner;
+
+
         return (
-            <View >
-                <Image
-                    style={styles.userPicture}
-                    source={{
-                        uri: _repository?.owner.avatar_url,
-                    }}
-                />
+            <View style={styles.container}>
+                <View style={styles.iconTextWrapper}>
+                    <Image
+                        style={styles.userPicture}
+                        source={{
+                            uri: avatar_url,
+                        }}
+                    />
+                    <Text style={styles.userName}>{login}</Text>
+                </View>
+
+                <View style={styles.titleWrapper}>
+                    <Text style={styles.repoName} numberOfLines={1}>{name}</Text>
+                    <TouchableOpacity style={styles.stars} activeOpacity={0.5} onPress={() => toggleIsStarred(repository.id)}>
+                        <Icon name={isStarred ? "star" : "star-o"} size={16} color={isStarred ? COLORS_THEME.alert : COLORS_THEME.text_tertiary} />
+                        <Text style={styles.count} >{repository.stargazers_count}</Text>
+                    </TouchableOpacity>
+                </View>
+                {description && <Text style={styles.description}>{description}</Text>}
+                {homepage !== "" &&
+                    (<View style={styles.iconTextWrapper}>
+                        <Icon name={"link"} size={16} color={COLORS_THEME.text_tertiary} />
+                        <Text style={styles.text}>{homepage}</Text>
+                    </View>)}
+                {
+                    language && (<View style={styles.iconTextWrapper}>
+                        <View style={[styles.languageIcon, { backgroundColor: LANGUAGE_COLOR[language] }]}></View>
+                        <Text style={styles.text}>{language}</Text>
+                    </View>)
+                }
             </View>)
     }
 
 
     return (
-        <View style={styles.container}>
-            {_loading ? <ActivityIndicator style={{ flexGrow: 1 }} size="large" color={COLORS_THEME.info} /> :
-                <RepositoryWrapper />}
-        </View>
+        _repository ? <RepositoryWrapper /> :
+            <View style={styles.container}><ActivityIndicator style={{ flexGrow: 1 }} size="large" color={COLORS_THEME.info} /></View>
+
     )
 }
 
@@ -87,12 +83,58 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: COLORS_THEME.bg_secondary,
         padding: 16,
+        color: COLORS_THEME.text_primary,
+    },
+    iconTextWrapper: {
+        display: "flex",
+        flexDirection: "row",
+        alignItems: "center",
+        marginBottom: 16,
     },
     userPicture: {
-        height: 80,
-        width: 80,
+        height: 48,
+        width: 48,
         borderRadius: 40,
-    }
+    },
+    userName: {
+        color: COLORS_THEME.text_tertiary,
+        fontSize: 22,
+        marginLeft: 16,
+    },
+    repoName: {
+        color: COLORS_THEME.text_primary,
+        fontSize: 30,
+        fontWeight: "600",
+        marginTop: 8,
+        marginBottom: 24,
+    },
+    description: {
+        color: COLORS_THEME.text_secondary,
+        fontSize: 16,
+        marginBottom: 24,
+    },
+    text: {
+        color: COLORS_THEME.border_tertiary,
+        marginLeft: 8,
+    },
+    languageIcon: {
+        height: 16,
+        width: 16,
+        borderRadius: 8
+    },
+    titleWrapper: {
+        display: "flex",
+        justifyContent: "space-between",
+        flexDirection: "row",
+        alignItems: "baseline",
+        flexGrow: 1,
+    },
+    stars: {
+        display: "flex",
+        flexDirection: "row",
+        alignItems: "baseline",
+        marginLeft: 8,
+    },
 });
 
 

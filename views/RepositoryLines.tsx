@@ -7,21 +7,15 @@ import { COLORS_THEME, STORAGE_KEY } from '../utils/constants'
 import { getRepos } from '../logic/dataFetch';
 
 
-const RepositoryLines = ({ initialRepositories, starredRepositories, navigation }: { initialRepositories: RepositoryLightModel[], starredRepositories: string[], navigation: any }) => {
+const RepositoryLines = ({ initialRepositories, starredRepositories, navigation, route }: { initialRepositories: RepositoryLightModel[], starredRepositories: string[], navigation: any, route: any }) => {
 
     const [_starredRepositories, setStarredRepositories] = useState<string[]>(starredRepositories);
     const [_repositories, setRepositories] = useState<RepositoryLightModel[]>(initialRepositories);
     const [_loading, setLoading] = useState<boolean>(false);
 
-
-    useEffect(() => {
-        console.log(initialRepositories.length, _repositories.length);
-    }, [_repositories])
-
     const endOfList = () => {
         if (!_loading) {
             setLoading(true);
-            console.log("enf of list fetch");
             getRepos(_repositories, setRepositories);
             setTimeout(() => {
                 //to show the loader
@@ -56,10 +50,11 @@ const RepositoryLines = ({ initialRepositories, starredRepositories, navigation 
 
     return (
         <SafeAreaView style={styles.container}>
+            <Text>{_repositories.length}</Text>
             <FlatList
                 contentContainerStyle={{ flexGrow: 1 }}
                 data={_repositories}
-                renderItem={({ item }: { item: RepositoryLightModel }) => <RepositoryLine repository={item} isStarred={_starredRepositories.includes(item.id)} toggleIsStarred={saveData} navigation={navigation} />}
+                renderItem={({ item }: { item: RepositoryLightModel }) => <RepositoryLine repository={item} isStarred={_starredRepositories.includes(item.id)} toggleIsStarred={saveData} navigation={navigation} route={route} />}
                 ListFooterComponent={() => footer()}
                 ListFooterComponentStyle={styles.loader}
                 keyExtractor={(item: { id: string; }) => item.id + ''}

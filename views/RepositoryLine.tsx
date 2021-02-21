@@ -5,13 +5,17 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import { COLORS_THEME } from '../utils/constants';
 
 
-const RepositoryLine = ({ repository, isStarred, toggleIsStarred, navigation }: { repository: RepositoryLightModel, isStarred: boolean, toggleIsStarred: Function, navigation: any }) => {
+const RepositoryLine = ({ repository, isStarred, toggleIsStarred, navigation, route }: { repository: RepositoryLightModel, isStarred: boolean, toggleIsStarred: Function, navigation: any, route: any }) => {
 
     const [_pressed, setPressed] = useState<boolean>(false);
 
+    const handleOnPress = () => {
+        navigation.navigate('Repository', { owner: repository.owner.login, repo: repository.name })
+    }
+
     return (
         repository ?
-            (<TouchableOpacity activeOpacity={1} onPressIn={() => setPressed(true)} onPressOut={() => setPressed(false)} onPress={() => navigation.navigate('Repository', { owner: repository.owner.login, repo: repository.name })}>
+            (<TouchableOpacity activeOpacity={1} onPressIn={() => setPressed(true)} onPressOut={() => setPressed(false)} onPress={() => handleOnPress()}>
                 <View style={[_pressed && styles.item_pressed, styles.item]}>
                     <View style={styles.firstLine}>
                         <Text style={styles.title} numberOfLines={1}>{repository.owner.login} / {repository.name} </Text>
@@ -21,7 +25,6 @@ const RepositoryLine = ({ repository, isStarred, toggleIsStarred, navigation }: 
                         </TouchableOpacity>
                     </View>
                     {repository.description && < Text style={styles.description} numberOfLines={2}>{repository.description}</Text>}
-                    {/*item.language && <Text style={styles.language} >{item.language}</Text>*/}
                 </View>
             </TouchableOpacity >) : <ActivityIndicator style={{ flexGrow: 1 }} size="large" color={COLORS_THEME.info} />
     )
@@ -65,7 +68,6 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         alignItems: "baseline",
         flexGrow: 1,
-        position: "relative"
     },
 });
 
