@@ -25,8 +25,6 @@ const RepositoriesWrapper = ({ route, navigation }: { route: any, navigation: an
     const initialDataFetch = () => {
         //Need to pre initialise the first in the parent to fetch to not have to render awaited data in the flat list 
         _initialRepositories.length === 0 && getRepos(_initialRepositories, setInitialRepositories);
-        console.log(_initialRepositories.length);
-
     }
 
     //had to move this here because Typescript does not let me cancel asynch function in a useEffect return () => false 

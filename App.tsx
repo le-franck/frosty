@@ -1,8 +1,8 @@
 import React from 'react';
-import Tabbar from './navigation/Tabbar';
+import Tabbar from './src/navigation/Tabbar';
 import { NavigationContainer } from '@react-navigation/native';
 import { StyleSheet, StatusBar, SafeAreaView } from 'react-native';
-import { COLORS_THEME } from './utils/constants';
+import { COLORS_THEME } from './src/utils/constants';
 
 const App = () => {
 

@@ -15,7 +15,7 @@ const RepositoriesNavigator = () => {
     const LogoTitle = () => {
         return (
             <Image
-                style={{ width: 32, height: 32 }}
+                style={{ width: 32, height: 32, marginVertical: 16 }}
                 source={require('../img/GitHub-Mark-Light-120px-plus.png')}
             />
         );
@@ -26,7 +26,7 @@ const RepositoriesNavigator = () => {
         <Stack.Navigator screenOptions={{
             headerStyle: {
                 backgroundColor: COLORS_THEME.bg_primary,
-                height: 56
+                height: 56,
             },
             headerTintColor: COLORS_THEME.info,
             headerTitleStyle: {

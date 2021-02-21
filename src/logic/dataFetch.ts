@@ -55,8 +55,6 @@ export const getRepos = (repositories: RepositoryLightModel[], setRepositories: 
 }
 
 export const getRepo = (setRepository: Function, owner: string, repo: string) => {
-    console.log('https://api.github.com/repos/' + owner + '/' + repo);
-
     fetch('https://api.github.com/repos/' + owner + '/' + repo, {
         'headers': {
             'Authorization': "token 66ef3f80be2e4f109bfbb55831bb0e88006281b1",
@@ -78,7 +76,6 @@ export const getRepo = (setRepository: Function, owner: string, repo: string) =>
                 subscribers_count,
                 watchers_count,
             } = responseJson;
-            console.log(responseJson);
             const user: UserLightModel = {
                 id: owner.id,
                 avatar_url: owner.avatar_url,

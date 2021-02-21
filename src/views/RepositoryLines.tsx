@@ -58,7 +58,6 @@ const RepositoryLines = ({ initialRepositories, starredRepositories, navigation,
 
     return (
         <SafeAreaView style={styles.container}>
-            <Text>{_repositories.length}</Text>
             <FlatList
                 contentContainerStyle={{ flexGrow: 1 }}
                 data={_repositories}

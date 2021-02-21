@@ -20,7 +20,6 @@ const TABS = {
 const TopBar = () => {
 
     const MyTabBar = ({ state, descriptors, navigation, position }: { state: any, descriptors: any, navigation: any, position: any }) => {
-
         return (
             <View style={styles.tabBarWrapper}>
                 {state.routes.map((route, index) => {
@@ -59,6 +58,7 @@ const TopBar = () => {
                         outputRange: inputRange.map(i => (i === index ? 1 : 0)),
                     });
 
+
                     return (
                         <TouchableOpacity
                             accessibilityRole="button"
@@ -67,9 +67,10 @@ const TopBar = () => {
                             testID={options.tabBarTestID}
                             onPress={onPress}
                             onLongPress={onLongPress}
-                            style={styles.textWrapper}
+                            style={[styles.textWrapper]}
+                            key={index}
                         >
-                            <Animated.Text style={[{ color: isFocused ? COLORS_THEME.info : COLORS_THEME.text_secondary }]}>
+                            <Animated.Text style={[styles.text, isFocused && styles.textFocus]}>
                                 {label}
                             </Animated.Text>
                         </TouchableOpacity>
@@ -89,19 +90,26 @@ const TopBar = () => {
 
 const styles = StyleSheet.create({
     tabBarWrapper: {
+        display: "flex",
         flexDirection: 'row',
         backgroundColor: COLORS_THEME.bg_primary,
-        height: 24,
-        paddingTop: 8,
+        alignItems: "stretch"
     },
     textWrapper: {
+        paddingTop: 16,
+        paddingBottom: 16,
         flex: 1,
         display: "flex",
         alignItems: "center",
-        alignSelf: "center"
+
     },
     text: {
-        color: COLORS_THEME.text_secondary
+        color: COLORS_THEME.text_tertiary,
+        fontWeight: "500",
+        fontSize: 16,
+    },
+    textFocus: {
+        color: COLORS_THEME.info,
     }
 });
 
