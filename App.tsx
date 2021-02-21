@@ -1,22 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import Tabbar from './navigation/Tabbar';
 import { NavigationContainer } from '@react-navigation/native';
-import { StyleSheet, View, NativeEventEmitter, NativeModules, StatusBar, SafeAreaView } from 'react-native';
+import { StyleSheet, StatusBar, SafeAreaView } from 'react-native';
 import { COLORS_THEME } from './utils/constants';
-const { StatusBarManager } = NativeModules;
 
 const App = () => {
 
-  const [statusBarHeight, setStatusBarHeight] = useState<number>(0);
-
-  useEffect(() => {
-    StatusBarManager && StatusBarManager.getHeight(({ height }: { height: number }) => { setStatusBarHeight(height) });
-  }, [])
-
-
   return (
     <NavigationContainer>
-      <SafeAreaView style={{ flex: 1, backgroundColor: COLORS_THEME.bg_primary }}>
+      <SafeAreaView style={styles.container}>
         <StatusBar
           barStyle="light-content"
           hidden={false}
@@ -32,7 +24,8 @@ const App = () => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flex: 1,//make the app full screen
+    backgroundColor: COLORS_THEME.bg_primary //color of outside parts of the app (notch and hom button)
   },
 });
 

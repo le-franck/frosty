@@ -8,18 +8,16 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 
 const RepositoryView = ({ owner, repo }: { owner: string, repo: string, }) => {
     const [_loading, setLoading] = useState<boolean>(false);
-    const [_repository, setRepository] = useState<RepositoryModel>(null)
+    const [_repository, setRepository] = useState<RepositoryModel | undefined>()
 
     useEffect(() => {
         setLoading(true);
-        getRepo(setRepository, owner, repo)
+        getRepo(setRepository, owner, repo);
         setLoading(false);
     }, [])
 
 
     const RepositoryWrapper = () => {
-        console.log(_repository);
-
         const {
             id,
             description,

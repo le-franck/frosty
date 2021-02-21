@@ -6,6 +6,7 @@ import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
 import { COLORS_THEME } from '../utils/constants';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Profile from '../views/Profile';
+import RepositoriesNavigator from './RepositoriesNavigator';
 
 const Tab = createBottomTabNavigator();
 
@@ -17,7 +18,7 @@ const Tabbar = () => {
             switch (name) {
                 case "Home":
                     return <Icon name={"home"} size={32} color={isFocused ? COLORS_THEME.info : COLORS_THEME.text_tertiary} />
-                case "Repos":
+                case "Github":
                     return <Icon name={"github"} size={32} color={isFocused ? COLORS_THEME.info : COLORS_THEME.text_tertiary} />
                 case "Profile":
                     return <Icon name={"user"} size={32} color={isFocused ? COLORS_THEME.info : COLORS_THEME.text_tertiary} />
@@ -75,7 +76,7 @@ const Tabbar = () => {
     return (
         <Tab.Navigator tabBar={props => <MyTabBar state={props.state} descriptors={props.descriptors} navigation={props.navigation} />} >
             <Tab.Screen name="Home" component={Home} />
-            <Tab.Screen name="Repos" component={RepositoryNavigator} />
+            <Tab.Screen name="Github" component={RepositoriesNavigator} />
             <Tab.Screen name="Profile" component={Profile} />
         </Tab.Navigator>
     );

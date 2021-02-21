@@ -46,13 +46,6 @@ const RepositoriesWrapper = ({ route, navigation }: { route: any, navigation: an
 
     return (
         <View style={styles.container}>
-            <View style={styles.header}>
-                <View style={styles.headerLeft}>
-                </View>
-                <Image source={require('../img/GitHub-Mark-Light-120px-plus.png')} style={styles.headerImage} />
-                <View style={styles.headerRight}>
-                </View>
-            </View>
             {_initialRepositories.length > 0 ?
                 <RepositoryLines initialRepositories={_initialRepositories} starredRepositories={_starredRepositories} navigation={navigation} route={route} /> :
                 <ActivityIndicator style={{ flexGrow: 1, backgroundColor: COLORS_THEME.bg_secondary }} size="large" color={COLORS_THEME.info} />}

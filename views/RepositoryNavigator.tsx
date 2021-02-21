@@ -10,38 +10,22 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import { getRepos } from '../logic/dataFetch';
 import { RepositoryLightModel } from '../model/repository_light';
 import RepositoriesWrapper from './RepositoriesWrapper';
+import RepositoriesStarredWrapper from './RepositoriesStarredWrapper';
+import { NavigationContainer } from '@react-navigation/native';
 
 const Stack = createStackNavigator();
 
 const RepositoryNavigator = () => {
 
     const Repository = ({ route, navigation }: { route: any, navigation: any }) => {
-        const { owner, repo } = route.params;
-        return (
-            <View style={styles.container}>
-                <View style={styles.header}>
-                    <View style={styles.headerLeft}>
-                        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.headerButton}>
-                            <Icon
-                                name="angle-left"
-                                size={32}
-                                color={COLORS_THEME.info}
-                            />
-                            <Text style={styles.headerText}>Back</Text>
-                        </TouchableOpacity>
-                    </View>
 
-                    <Image source={require('../img/GitHub-Mark-Light-120px-plus.png')} style={styles.headerImage} />
-                    <View style={styles.headerRight}></View>
-                </View>
-                <RepositoryView owner={owner} repo={repo} />
-            </View >);
     }
 
     return (
         //headerMode={"none"} to not show the header with the name of the scree
         <Stack.Navigator headerMode={"none"}>
             <Stack.Screen name="Repositories" component={RepositoriesWrapper} />
+            <Stack.Screen name="Saved" component={RepositoriesStarredWrapper} />
             <Stack.Screen name="Repository" component={Repository} />
         </Stack.Navigator>
     );
