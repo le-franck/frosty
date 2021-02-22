@@ -1,6 +1,7 @@
 import { RepositoryLightModel } from "../model/repository_light";
 import { RepositoryModel } from "../model/repository";
 import { UserLightModel } from "../model/user_light";
+import { Share } from "react-native";
 
 interface Response {
     incomplete_results: boolean;
@@ -103,4 +104,23 @@ export const getRepo = (setRepository: Function, fullname: string,) => {
         })
 
         .catch(error => console.log(error));
+}
+
+export const onShare = async (link: string) => {
+    try {
+        const result = await Share.share({
+            message: link,
+        });
+        if (result.action === Share.sharedAction) {
+            if (result.activityType) {
+                // shared with activity type of result.activityType
+            } else {
+                // shared
+            }
+        } else if (result.action === Share.dismissedAction) {
+            // dismissed
+        }
+    } catch (error) {
+        alert(error.message);
+    }
 }

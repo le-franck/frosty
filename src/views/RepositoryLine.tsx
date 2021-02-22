@@ -4,6 +4,7 @@ import { RepositoryLightModel } from '../model/repository_light';
 import { RepositoryLocalModel } from '../model/repository_local';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { COLORS_THEME } from '../utils/constants';
+import { onShare } from '../logic/dataFetch';
 
 
 const RepositoryLine = ({ repository, isStarred, toggleIsStarred, navigation, route }: { repository: RepositoryLightModel, isStarred: boolean, toggleIsStarred: Function, navigation: any, route: any }) => {
@@ -20,9 +21,11 @@ const RepositoryLine = ({ repository, isStarred, toggleIsStarred, navigation, ro
         description: repository.description,
     }
 
+    const link: string = "https://github.com/" + repository.owner.login + "/" + repository.name;
+
     return (
         repository ?
-            (<TouchableOpacity activeOpacity={1} onPressIn={() => setPressed(true)} onPressOut={() => setPressed(false)} onPress={() => handleOnPress()}>
+            (<TouchableOpacity activeOpacity={1} onPressIn={() => setPressed(true)} onPressOut={() => setPressed(false)} onPress={() => handleOnPress()} onLongPress={() => onShare(link)}>
                 <View style={[_pressed && styles.item_pressed, styles.item]}>
                     <View style={styles.firstLine}>
                         <Text style={styles.title} numberOfLines={1}>{repository.owner.login} / {repository.name} </Text>

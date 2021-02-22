@@ -4,6 +4,7 @@ import { RepositoryLightModel } from '../model/repository_light';
 import { RepositoryLocalModel } from '../model/repository_local';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { COLORS_THEME } from '../utils/constants';
+import { onShare } from '../logic/dataFetch';
 
 
 const RepositoryStarredLine = ({ repository, toggleIsStarred, navigation, route }: { repository: RepositoryLocalModel, toggleIsStarred: Function, navigation: any, route: any }) => {
@@ -24,15 +25,16 @@ const RepositoryStarredLine = ({ repository, toggleIsStarred, navigation, route 
     }
 
     const splitedFullName: string[] = repository.fullname.split("/");
-    const isStarred = true;
+    const link: string = "https://github.com/" + repository.fullname;
+
     return (
         repository ?
-            (<TouchableOpacity activeOpacity={1} onPressIn={() => setPressed(true)} onPressOut={() => setPressed(false)} onPress={() => handleOnPress()}>
+            (<TouchableOpacity activeOpacity={1} onPressIn={() => setPressed(true)} onPressOut={() => setPressed(false)} onPress={() => handleOnPress()} onLongPress={() => onShare(link)}>
                 <View style={[_pressed && styles.item_pressed, styles.item]}>
                     <View style={styles.firstLine}>
                         <Text style={styles.title} numberOfLines={1}>{splitedFullName[0]} / {splitedFullName[1]} </Text>
                         <TouchableOpacity style={styles.stars} activeOpacity={0.5} onPress={() => toggleIsStarred(savableRepo)}>
-                            <Icon name={isStarred ? "star" : "star-o"} size={16} color={isStarred ? COLORS_THEME.alert : COLORS_THEME.text_tertiary} />
+                            <Icon name={"star"} size={16} color={COLORS_THEME.alert} />
                         </TouchableOpacity>
                     </View>
                     {repository.description && < Text style={styles.description} numberOfLines={2}>{repository.description}</Text>}
