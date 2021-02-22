@@ -18,7 +18,7 @@ const RepositoriesStarredWrapper = ({ route, navigation }: { route: any, navigat
 
     useEffect(() => {
         readData();
-    })
+    }, [])
 
 
     //had to move this here because Typescript does not let me cancel asynch function in a useEffect return () => false 
@@ -39,7 +39,7 @@ const RepositoriesStarredWrapper = ({ route, navigation }: { route: any, navigat
     return (
         <View style={styles.container}>
             {_starredRepositories.length > 0 ?
-                <RepositoryStarredLines starredRepositories={_starredRepositories} navigation={navigation} route={route} />
+                <RepositoryStarredLines starredRepositories={_starredRepositories} refetch={readData} navigation={navigation} route={route} />
                 : <ActivityIndicator style={{ flexGrow: 1, backgroundColor: COLORS_THEME.bg_secondary }} size="large" color={COLORS_THEME.info} />
 
             }

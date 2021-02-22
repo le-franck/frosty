@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { SafeAreaView, View, FlatList, StyleSheet, ActivityIndicator, Text } from 'react-native';
+import { SafeAreaView, View, FlatList, StyleSheet, ActivityIndicator, Text, RefreshControl } from 'react-native';
 import { RepositoryLightModel } from '../model/repository_light';
 import RepositoryLine from './RepositoryLine';
 import AsyncStorage from '@react-native-community/async-storage';
@@ -9,10 +9,27 @@ import { RepositoryLocalModel } from '../model/repository_local';
 import _ from 'lodash';
 import RepositoryStarredLine from './RepositoryStarredLine';
 
-const RepositoryStarredLines = ({ starredRepositories, navigation, route }: { starredRepositories: RepositoryLocalModel[], navigation: any, route: any }) => {
-
+const RepositoryStarredLines = ({ starredRepositories, refetch, navigation, route, }: { starredRepositories: RepositoryLocalModel[], refetch: Function, navigation: any, route: any }) => {
+    const [refreshing, setRefreshing] = React.useState(false);
     const [_starredRepositories, setStarredRepositories] = useState<RepositoryLocalModel[]>(starredRepositories);
 
+    const wait = (timeout: number) => {
+        return new Promise(resolve => setTimeout(resolve, timeout));
+    }
+
+    const readData = async () => {
+        try {
+            const starredRepositories = await AsyncStorage.getItem(STORAGE_KEY);
+
+            let starredRepositoriesParsed: RepositoryLocalModel[] = [];
+            if (starredRepositories)
+                starredRepositoriesParsed = JSON.parse(starredRepositories);
+            setStarredRepositories(starredRepositoriesParsed);
+
+        } catch (e) {
+            console.error("error in the local storage")
+        }
+    }
 
     const saveData = async (repo: RepositoryLocalModel) => {
         try {
@@ -35,6 +52,14 @@ const RepositoryStarredLines = ({ starredRepositories, navigation, route }: { st
         }
     }
 
+    const onRefresh = React.useCallback(() => {
+        setRefreshing(true);
+        readData();
+        wait(2000).then(() => setRefreshing(false));
+    }, []);
+
+
+
     return (
         <SafeAreaView style={styles.container}>
             <FlatList
@@ -42,6 +67,10 @@ const RepositoryStarredLines = ({ starredRepositories, navigation, route }: { st
                 data={_starredRepositories}
                 renderItem={({ item }: { item: RepositoryLocalModel }) => <RepositoryStarredLine repository={item} toggleIsStarred={saveData} navigation={navigation} route={route} />}
                 keyExtractor={(item: { id: string; }) => item.id + ''}
+                refreshControl={<RefreshControl
+                    refreshing={refreshing}
+                    onRefresh={onRefresh}
+                />}
 
             />
         </SafeAreaView>
