@@ -9,9 +9,6 @@ import { onShare } from '../logic/dataFetch';
 
 const RepositoryStarredLine = ({ repository, toggleIsStarred, navigation, route }: { repository: RepositoryLocalModel, toggleIsStarred: Function, navigation: any, route: any }) => {
 
-    console.log(repository);
-
-
     const [_pressed, setPressed] = useState<boolean>(false);
 
     const handleOnPress = () => {

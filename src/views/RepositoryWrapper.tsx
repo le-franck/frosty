@@ -1,13 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, Text, ActivityIndicator, TouchableOpacity, Image } from 'react-native';
-import { RepositoryModel } from '../model/repository';
-import { RepositoryLocalModel } from '../model/repository_local';
-import { COLORS_THEME, LANGUAGE_COLOR } from '../utils/constants';
-import { getRepo } from '../logic/dataFetch';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import React from 'react';
+import { View, StyleSheet } from 'react-native';
+import { COLORS_THEME } from '../utils/constants';
 import RepositoryView from './Repository';
 
-const RepositoryWrapper = ({ route, navigation }: { route: any, navigation: any }) => {
+const RepositoryWrapper = ({ route }: { route: any }) => {
     const { fullname } = route.params;
     return (
         <View style={styles.container}>

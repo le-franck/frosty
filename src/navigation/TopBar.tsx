@@ -1,12 +1,7 @@
 import * as React from 'react';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
-import Home from "../views/Home";
-import RepositoryNavigator from '../views/RepositoryNavigator';
-import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
+import { View, TouchableOpacity, StyleSheet } from 'react-native';
 import { COLORS_THEME } from '../utils/constants';
-import Icon from 'react-native-vector-icons/FontAwesome';
-import Profile from '../views/Profile';
-import RepositoriesNavigator from './RepositoriesNavigator';
 import RepositoriesWrapper from '../views/RepositoriesWrapper';
 import Animated from 'react-native-reanimated';
 import RepositoriesStarredWrapper from '../views/RepositoriesStarredWrapper';
@@ -23,7 +18,7 @@ const TopBar = () => {
     const MyTabBar = ({ state, descriptors, navigation, position }: { state: any, descriptors: any, navigation: any, position: any }) => {
         return (
             <View style={styles.tabBarWrapper}>
-                {state.routes.map((route, index) => {
+                {state.routes.map((route: { key: string; name: string; }, index: number) => {
                     const { options } = descriptors[route.key];
                     const label =
                         options.tabBarLabel !== undefined
@@ -53,10 +48,10 @@ const TopBar = () => {
                         });
                     };
 
-                    const inputRange = state.routes.map((_, i) => i);
+                    const inputRange = state.routes.map((_: any, i: number) => i);
                     const opacity = Animated.interpolate(position, {
                         inputRange,
-                        outputRange: inputRange.map(i => (i === index ? 1 : 0)),
+                        outputRange: inputRange.map((i: number) => (i === index ? 1 : 0)),
                     });
 
 

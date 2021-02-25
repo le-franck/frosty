@@ -47,7 +47,7 @@ const RepositoriesNavigator = () => {
         }}
 
         >
-            <Stack.Screen name="MostRepositories" component={TopBar} />
+            <Stack.Screen name="TopBar" component={TopBar} />
             <Stack.Screen name="Repository" component={RepositoryWrapper} options={({ route }) => ({ headerRight: () => <ShareButton route={route} />, headerRightContainerStyle: { marginRight: 8 } })} />
         </Stack.Navigator>
     );

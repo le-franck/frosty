@@ -2,6 +2,9 @@ import { RepositoryLightModel } from "../model/repository_light";
 import { RepositoryModel } from "../model/repository";
 import { UserLightModel } from "../model/user_light";
 import { Share } from "react-native";
+import AsyncStorage from "@react-native-community/async-storage";
+import { STORAGE_KEY } from "../utils/constants";
+import { RepositoryLocalModel } from "model/repository_local";
 
 interface Response {
     incomplete_results: boolean;
@@ -122,5 +125,19 @@ export const onShare = async (link: string) => {
         }
     } catch (error) {
         alert(error.message);
+    }
+}
+
+export const readData = async (setStarredRepositories: Function) => {
+    try {
+        const starredRepositories = await AsyncStorage.getItem(STORAGE_KEY);
+
+        let starredRepositoriesParsed: RepositoryLocalModel[] = [];
+        if (starredRepositories)
+            starredRepositoriesParsed = JSON.parse(starredRepositories);
+        setStarredRepositories(starredRepositoriesParsed);
+
+    } catch (e) {
+        console.error("error in the local storage")
     }
 }

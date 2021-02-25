@@ -1,47 +1,29 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Image, View, Button, Text, ActivityIndicator } from 'react-native';
-import RepositoryLines from './RepositoryLines';
-import RepositoryView from './Repository';
-import { COLORS_THEME, STORAGE_KEY } from '../utils/constants';
-import AsyncStorage from '@react-native-community/async-storage';
-import { createStackNavigator } from '@react-navigation/stack';
-import Icon from 'react-native-vector-icons/FontAwesome';
-import { TouchableOpacity } from 'react-native-gesture-handler';
-import { getRepos } from '../logic/dataFetch';
-import { RepositoryLightModel } from '../model/repository_light';
+import { StyleSheet, View, ActivityIndicator } from 'react-native';
+import { COLORS_THEME } from '../utils/constants';
 import { RepositoryLocalModel } from '../model/repository_local';
 import RepositoryStarredLines from './RepositoryStarredLines';
+import { readData } from '../logic/dataFetch';
 
 const RepositoriesStarredWrapper = ({ route, navigation }: { route: any, navigation: any }) => {
 
     const [_starredRepositories, setStarredRepositories] = useState<RepositoryLocalModel[]>([]);
+    const [_loading, setLoading] = useState<boolean>(false);
 
     useEffect(() => {
-        readData();
-    }, [])
-
-
-    //had to move this here because Typescript does not let me cancel asynch function in a useEffect return () => false 
-    const readData = async () => {
-        try {
-            const starredRepositories = await AsyncStorage.getItem(STORAGE_KEY);
-
-            let starredRepositoriesParsed: RepositoryLocalModel[] = [];
-            if (starredRepositories)
-                starredRepositoriesParsed = JSON.parse(starredRepositories);
-            setStarredRepositories(starredRepositoriesParsed);
-
-        } catch (e) {
-            console.error("error in the local storage")
-        }
-    }
+        const unsubscribe = navigation.addListener('focus', () => {
+            setLoading(true)
+            readData(setStarredRepositories).then(() =>
+                setLoading(false)
+            );
+        });
+        return unsubscribe;
+    }, [navigation])
 
     return (
         <View style={styles.container}>
-            {_starredRepositories.length > 0 ?
+            {_loading ? <ActivityIndicator style={{ flexGrow: 1, backgroundColor: COLORS_THEME.bg_secondary }} size="large" color={COLORS_THEME.info} /> :
                 <RepositoryStarredLines starredRepositories={_starredRepositories} refetch={readData} navigation={navigation} route={route} />
-                : <ActivityIndicator style={{ flexGrow: 1, backgroundColor: COLORS_THEME.bg_secondary }} size="large" color={COLORS_THEME.info} />
-
             }
         </View>);
 
