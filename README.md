@@ -1,3 +1,10 @@
-# frosty
-
-cd ios && pod install
+- GitHub rest api. ✅
+- Typescript ✅
+- A tabbar.✅
+- A main page with a paginating list of the most starred repos on GitHub.✅
+- A details page for each entry with number of forks, author, number of stars and other interesting details.✅
+- It must be possible to add and remove repos as favourites locally in the app.✅
+- A favourites list with all your favourite repos.✅
+- MobX for state management.
+- Share feature.
+- Tests in jest and/or detox.✅
