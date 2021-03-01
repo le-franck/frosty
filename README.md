@@ -6,5 +6,5 @@
 - It must be possible to add and remove repos as favourites locally in the app.✅
 - A favourites list with all your favourite repos.✅
 - MobX for state management.
-- Share feature.
-- Tests in jest and/or detox.✅
+- Share feature.✅
+- Tests in jest and/or detox.
