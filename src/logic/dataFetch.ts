@@ -6,6 +6,9 @@ import AsyncStorage from "@react-native-community/async-storage";
 import { STORAGE_KEY } from "../utils/constants";
 import { RepositoryLocalModel } from "model/repository_local";
 
+//Need to create your own token : https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token
+import { github_token } from "../private/tokens";
+
 interface Response {
     incomplete_results: boolean;
     items: RepositoryLightModel[];
@@ -26,7 +29,7 @@ export const getRepos = (repositories: RepositoryLightModel[], setRepositories: 
 
     fetch(lastMonthUrl, {
         'headers': {
-            'Authorization': "token 66ef3f80be2e4f109bfbb55831bb0e88006281b1",
+            'Authorization': "token " + github_token,
             'Accept': 'application/vnd.github.v3+json'
         }
     })
@@ -61,7 +64,7 @@ export const getRepos = (repositories: RepositoryLightModel[], setRepositories: 
 export const getRepo = (setRepository: Function, fullname: string,) => {
     fetch('https://api.github.com/repos/' + fullname, {
         'headers': {
-            'Authorization': "token 66ef3f80be2e4f109bfbb55831bb0e88006281b1",
+            'Authorization': "token " + github_token,
             'Accept': 'application/vnd.github.v3+json'
         }
     })
@@ -101,8 +104,6 @@ export const getRepo = (setRepository: Function, fullname: string,) => {
                 subscribers_count,
                 watchers_count,
             }
-
-
             setRepository(res);
         })
 
